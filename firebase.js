@@ -26,43 +26,44 @@ const storage = getStorage();
 
 import { collection, query, where, getDocs } from "firebase/firestore";
 const q = query(collection(db, "mascotas"), where("tipo", "==", "gato"));
-const querySnapshot = await getDocs(q);
 
-querySnapshot.forEach((doc) => {
-    // doc.data() is never undefined for query doc snapshots
-    let data = doc.data();
-    let image = data.imagen.id;
+getDocs(q).then((result) => {
+    result.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        let data = doc.data();
+        let image = data.imagen.id;
 
-    let entidad = {
-        nombre: data.nombre,
-        tipo: data.tipo,
-        imagen: image,
-        edad: data.edad,
-        descripcion: data.descripcion,
-        precio: data.precio,
-        direccion: data.direccion
-    };
+        let entidad = {
+            nombre: data.nombre,
+            tipo: data.tipo,
+            imagen: image,
+            edad: data.edad,
+            descripcion: data.descripcion,
+            precio: data.precio,
+            direccion: data.direccion
+        };
 
-    let nombreAnimalArea = document.getElementById("nombreAnimal");
-    let imagenAnimalArea = document.getElementById("imagenAnimal");
-    let direccionAnimalArea = document.getElementById("direccionAnimal");
-    let descripcionAnimalArea = document.getElementById("animalDescripcion");
-    let precioAnimalArea = document.getElementById("animalPrecio");
-    let edadAnimalArea = document.getElementById("edadAnimal");
+        let nombreAnimalArea = document.getElementById("nombreAnimal");
+        let imagenAnimalArea = document.getElementById("imagenAnimal");
+        let direccionAnimalArea = document.getElementById("direccionAnimal");
+        let descripcionAnimalArea = document.getElementById("animalDescripcion");
+        let precioAnimalArea = document.getElementById("animalPrecio");
+        let edadAnimalArea = document.getElementById("edadAnimal");
 
-    nombreAnimalArea.innerText = entidad.nombre;
-    direccionAnimalArea.innerText = entidad.direccion;
-    descripcionAnimalArea.innerText = entidad.descripcion;
-    precioAnimalArea.innerText = entidad.precio;
-    edadAnimalArea.innerText =  `${entidad.edad} años`;
+        nombreAnimalArea.innerText = entidad.nombre;
+        direccionAnimalArea.innerText = entidad.direccion;
+        descripcionAnimalArea.innerText = entidad.descripcion;
+        precioAnimalArea.innerText = entidad.precio;
+        edadAnimalArea.innerText = `${entidad.edad} años`;
 
-    getDownloadURL(ref(storage, `imagenes/${image}`))
-        .then((url) => {
-            console.log("Descarga de imagen de firebase: " + url);
-            imagenAnimalArea.src = `${url}`;
-        });
+        getDownloadURL(ref(storage, `imagenes/${image}`))
+            .then((url) => {
+                console.log("Descarga de imagen de firebase: " + url);
+                imagenAnimalArea.src = `${url}`;
+            });
 
-    // console.log(doc.id, " => ", doc.data());
+        // console.log(doc.id, " => ", doc.data());
 
-    console.log(entidad);
+        console.log(entidad);
+    });
 });

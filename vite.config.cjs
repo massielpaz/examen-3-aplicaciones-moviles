@@ -21,7 +21,7 @@ export default defineConfig({
         main: resolve(__dirname, 'index.html')
       }
     },
-    target: 'esnext'
+    //target: 'esnext'
   },
   plugins: []
 });
